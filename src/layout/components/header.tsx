@@ -8,7 +8,6 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbS
 import Navigation from './navigation'
 import { useHeader } from '@/hooks/useHeader'
 import { PrivateRoutes } from '@/models/routes.model'
-import { Notificaciones } from './notificaciones'
 import { DialogTitle } from '@radix-ui/react-dialog'
 
 const Header = () => {
@@ -33,7 +32,7 @@ const Header = () => {
           <DialogTitle></DialogTitle>
           <SheetHeader>
             <div className="flex items-center gap-3 px-4 border-b py-3 h-14">
-              <h1>FashionScape</h1>
+              <h1>GRAPHICS</h1>
             </div>
           </SheetHeader>
           <Navigation />
@@ -58,7 +57,7 @@ const Header = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <Notificaciones></Notificaciones>
+      {/* <Notificaciones></Notificaciones> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">

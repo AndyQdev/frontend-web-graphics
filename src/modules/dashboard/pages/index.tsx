@@ -5,7 +5,6 @@ import {
   AreaChart,
   Bar,
   BarChart,
-  Label,
   Rectangle,
   ReferenceLine,
   ResponsiveContainer,
@@ -54,7 +53,7 @@ const Charts = (): JSX.Element => {
     const [selectedLocation, setSelectedLocation] = useState('SANTA CRUZ');
     const [selectedFaculty, setSelectedFaculty] = useState('05 CIENCIAS EXACTAS Y');
     const [selectedEtiqueta, setSelectedEtiqueta] = useState('Carreras');
-    const [selectedCantidad, setSelectedCantidad] = useState('inslocalidad');
+    const [selectedCantidad, setSelectedCantidad] = useState('inscarreras');
     const [selectedModalidad, setSelectedModalidad] = useState('presencial');
 
     //http://localhost:3000/api/estadisticas-academicas/filter?periodo=2019-1&localidad=SANTA CRUZ&facultad=05 CIENCIAS EXACTAS Y
@@ -63,14 +62,16 @@ const Charts = (): JSX.Element => {
     )
     const { allResource: allFacultades} = useGetAllResource(ENDPOINTS.FACULTAD)
     // const facultad: Facultad[] = allFacultades
-    const totalCount = allEstadisticas.reduce((acc, data) => {
-        if (selectedCantidad === 'inslocalidad') {
-            return acc + (data.inscritos_localidad || 0); // Sumamos 'inscritos_localidad'
-        } else if (selectedCantidad === 'insfacultad') {
-            return acc + (data.inscritos_facultad || 0); // Sumamos 'inscritos_facultad'
+    const totalCount = allEstadisticas.reduce((acc: any, data: any) => {
+        if (selectedCantidad === 'titulados') {
+            return acc + (data.titulados || 0); // Sumamos 'inscritos_localidad'
+        } else if (selectedCantidad === 'egresados') {
+            return acc + (data.egresados || 0); // Sumamos 'inscritos_facultad'
         } else if (selectedCantidad === 'inscarreras') {
             return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
-        } else {
+        }else if (selectedCantidad === 'retirados') {
+            return acc + (data.retirados || 0); // Sumamos 't_ins' (inscritos por carreras)
+        }else {
             return acc + (data.t_nue || 0); // Por defecto, sumamos 't_nue' (inscritos nuevos)
         }
     }, 0)
@@ -94,6 +95,7 @@ const Charts = (): JSX.Element => {
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
           >
+            {/* <option value="Todas">Todas</option> */}
             <option value="2019-1">2019-1</option>
             <option value="2019-2">2019-2</option>
             <option value="2020-1">2020-1</option>
@@ -112,6 +114,7 @@ const Charts = (): JSX.Element => {
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
+            {/* <option value="Todas">Todas</option> */}
             {locadidades.map((locadidad, index) => {
                 return <option key={index} value={locadidad}>{locadidad}</option>
             })}
@@ -128,7 +131,8 @@ const Charts = (): JSX.Element => {
             value={selectedFaculty}
             onChange={(e) => setSelectedFaculty(e.target.value)}
           >
-            {allFacultades.map((facultad, index:number) => {
+            <option value="Todas">Todas</option>
+            {allFacultades.map((facultad: any, index:number) => {
                 return <option key={index} value={facultad.nombre_facultad}>{facultad.nombre_facultad}</option>
             })}
           </select>
@@ -142,6 +146,7 @@ const Charts = (): JSX.Element => {
                 value={selectedModalidad}
                 onChange={(e) => setSelectedModalidad(e.target.value)}
             >
+                {/* <option value="Todas">Todas</option> */}
                 <option value="PRESENCIAL">PRESENCIAL</option>
                 <option value="VIRTUAL">VIRTUAL</option>
             </select>
@@ -163,9 +168,9 @@ const Charts = (): JSX.Element => {
                     value={selectedEtiqueta}
                     onChange={(e) => setSelectedEtiqueta(e.target.value)}
                 >
+                    <option value="carreras">Carreras</option>
                     <option value="localidad">Localidad</option>
                     <option value="facultad">Facultad</option>
-                    <option value="carreras">Carreras</option>
                     {/* Agregar más facultades aquí */}
                 </select>
             </th>
@@ -179,18 +184,23 @@ const Charts = (): JSX.Element => {
                     value={selectedCantidad}
                     onChange={(e) => setSelectedCantidad(e.target.value)}
                 >
-                    <option value="inslocalidad">Inscritos x localidades</option>
-                    <option value="insfacultad">Inscritos x facultades</option>
+                    {/* <option value="inslocalidad">Inscritos x localidades</option> */}
+                    {/* <option value="insfacultad">Inscritos x facultades</option> */}
                     <option value="inscarreras">Inscritos x carreras</option>
                     <option value="newinscritos">Inscritos nuevos</option>
-
+                    <option value="titulados">Titulados</option>
+                    <option value="egresados">Egresados</option>
+                    <option value="retirados">Retirados</option>
+                    
                     {/* Agregar más facultades aquí */}
                 </select>
             </th>
+            
           </tr>
+          
         </thead>
         <tbody>
-          {allEstadisticas.map((data, index:number) => (
+          {allEstadisticas.map((data: any, index:number) => (
             <tr key={index} className="border-b">
                 {
                     selectedEtiqueta === 'localidad' ? (
@@ -202,12 +212,14 @@ const Charts = (): JSX.Element => {
                     )
                 }
                 {
-                    selectedCantidad === 'inslocalidad' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.inscritos_localidad}</td>
-                    ) : selectedCantidad === 'insfacultad' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.inscritos_facultad}</td>
+                    selectedCantidad === 'titulados' ? (
+                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.titulados}</td>
+                    ) : selectedCantidad === 'egresados' ? (
+                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.egresados}</td>
                     ) : selectedCantidad === 'inscarreras' ? (
                         <td className="px-4 py-2 text-sm text-right text-gray-700">{data.t_ins}</td>
+                    ) : selectedCantidad === 'retirados' ? (
+                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.retirados}</td>
                     ) : (
                         <td className="px-4 py-2 text-sm text-right text-gray-700">{data.t_nue}</td>
                     )
@@ -227,16 +239,18 @@ const Charts = (): JSX.Element => {
       </div>
       <div className="col-span-1 grid gap-6">
       {/* <div className="col-span-full sm:col-span-2 grid gap-6"> */}
-      <Card className="" x-chunk="charts-01-chunk-0">
+      <Card x-chunk="charts-01-chunk-0">
         <CardHeader className="space-y-0 pb-2">
             <CardTitle className="text-4xl tabular-nums">
             {
-                selectedCantidad === 'inslocalidad' ? (
-                    'Inscritos por localidad'
-                ) : selectedCantidad === 'insfacultad' ? (
-                    'Inscritos por facultad'
+                selectedCantidad === 'titulados' ? (
+                    'Estudiantes Titulados'
+                ) : selectedCantidad === 'egresados' ? (
+                    'Estudiantes Egresados'
                 ) : selectedCantidad === 'inscarreras' ? (
                     'Inscritos por carrera'
+                ) : selectedCantidad === 'retirados' ? (
+                    'Estudiantes Retirados'
                 ) : (
                     'Inscritos nuevos'
                 )
@@ -260,7 +274,7 @@ const Charts = (): JSX.Element => {
                             right: -4,
                             bottom: 60,  // Aumentamos el margen inferior para más espacio
                         }}
-                        data={allEstadisticas.map((data) => ({
+                        data={allEstadisticas.map((data: any) => ({
                             // Mapeo dinámico de las etiquetas
                             etiqueta:
                                 selectedEtiqueta === 'localidad'
@@ -270,12 +284,14 @@ const Charts = (): JSX.Element => {
                                 : data.nombre_carrera,
                             // Mapeo dinámico de los valores de inscritos
                             inscritos:
-                                selectedCantidad === 'inslocalidad'
-                                ? data.inscritos_localidad
-                                : selectedCantidad === 'insfacultad'
-                                ? data.inscritos_facultad
+                                selectedCantidad === 'titulados'
+                                ? data.titulados
+                                : selectedCantidad === 'egresados'
+                                ? data.egresados
                                 : selectedCantidad === 'inscarreras'
                                 ? data.t_ins
+                                : selectedCantidad === 'retirados'
+                                ? data.retirados
                                 : data.t_nue,
                         }))}
                     >
@@ -343,7 +359,7 @@ const Charts = (): JSX.Element => {
                 <ResponsiveContainer width="100%" height={400}>
                     <AreaChart
                     accessibilityLayer
-                    data={allEstadisticas.map((data) => ({
+                    data={allEstadisticas.map((data: any) => ({
                         etiqueta:
                         selectedEtiqueta === 'localidad'
                             ? data.localidad

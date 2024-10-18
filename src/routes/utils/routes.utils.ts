@@ -20,6 +20,9 @@ export enum PublicRoutes {
 
 // const UserPage = lazy(() => import('@/pages/user'))
 const DashboardPage = lazy(() => import('@/modules/dashboard/pages/index'))
+const InscritosPage = lazy(() => import('@/modules/dashboard/pages/index'))
+const ComparacionPage = lazy(() => import('@/modules/dashboard/pages/comparation'))
+
 const NotFound = lazy(() => import('@/components/not-found'))
 const SettingPage = lazy(() => import('@/modules/settings/pages/setting/index'))
 export const PrivateAllRoutes: Route[] = [
@@ -31,6 +34,16 @@ export const PrivateAllRoutes: Route[] = [
   {
     path: PrivateRoutes.DASHBOARD,
     element: createElement(DashboardPage),
+    permissions: [] as PERMISSION[]
+  },
+  {
+    path: PrivateRoutes.INSCRITOS,
+    element: createElement(InscritosPage),
+    permissions: [] as PERMISSION[]
+  },
+  {
+    path: PrivateRoutes.COMPARACION,
+    element: createElement(ComparacionPage),
     permissions: [] as PERMISSION[]
   },
   {

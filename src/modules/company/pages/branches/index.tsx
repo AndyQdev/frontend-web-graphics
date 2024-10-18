@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { ChevronLeftIcon, File, ListFilterIcon, MoreHorizontal, PlusCircleIcon, Search } from 'lucide-react'
+import { useEffect } from 'react'
+import { ChevronLeftIcon, File, ListFilterIcon, MoreHorizontal, PlusCircleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { PrivateRoutes } from '@/models/routes.model'
@@ -20,9 +20,6 @@ import { useHeader } from '@/hooks'
 // import { useGetAllBranches } from '../../hooks/useBranch'
 import Loading from '@/components/shared/loading'
 import { type Branch } from '../../models/branch.model'
-import Pagination from '@/components/shared/pagination'
-import useDebounce from '@/hooks/useDebounce'
-import { Input } from '@/components/ui/input'
 import { useGetAllResource } from '@/hooks/useCrud'
 import { ENDPOINTS } from '@/utils'
 
@@ -33,9 +30,8 @@ const BranchesPage = () => {
     { label: 'Sucursales' }
   ])
   const navigate = useNavigate()
-  const { allResource: branches, countData, isLoading, filterOptions, newPage, prevPage, setOffset, search, error } = useGetAllResource(ENDPOINTS.BRANCH)
-  const [searchProduct, setSearchProduct] = useState('')
-  const debounceSearchProduct = useDebounce(searchProduct, 1000)
+  const { allResource: branches, isLoading, error } = useGetAllResource(ENDPOINTS.BRANCH)
+  // const debounceSearchProduct = useDebounce(searchProduct, 1000)
   let subscribe = true
   useEffect(() => {
     if (subscribe && error) {
@@ -45,9 +41,9 @@ const BranchesPage = () => {
       subscribe = false
     }
   }, [error])
-  useEffect(() => {
-    search('name', debounceSearchProduct)
-  }, [debounceSearchProduct])
+  // useEffect(() => {
+  //   search('name', debounceSearchProduct)
+  // }, [debounceSearchProduct])
   return (
     <section className='grid gap-4 overflow-hidden w-full relative'>
       <div className="inline-flex items-center flex-wrap gap-2">
@@ -63,13 +59,13 @@ const BranchesPage = () => {
         </Button>
         <form className='py-1' onSubmit={(e) => { e.preventDefault() }}>
             <div className="relative">
-              <Search className="absolute left-2.5 top-2 h-4 w-4 text-muted-foreground" />
+              {/* <Search className="absolute left-2.5 top-2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Buscar"
                 className="w-full appearance-none bg-background pl-8 shadow-none outline-none h-8 ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 ring-offset-0 xl:min-w-80"
                 onChange={(e) => { setSearchProduct(e.target.value) }}
-              />
+              /> */}
             </div>
           </form>
         <DropdownMenu>
@@ -155,7 +151,7 @@ const BranchesPage = () => {
           {isLoading && <div className='grid place-content-center place-items-center w-full shrink-0 pt-6'><Loading /></div>}
         </CardContent>
         <CardFooter className='w-full'>
-              <Pagination
+              {/* <Pagination
                 allItems={countData ?? 0}
                 currentItems={branches?.length ?? 0}
                 limit={filterOptions.limit}
@@ -165,7 +161,7 @@ const BranchesPage = () => {
                 setOffset={setOffset}
                 setLimit={() => { }}
                 params={true}
-              />
+              /> */}
             </CardFooter>
       </Card>
     </section>

@@ -19,8 +19,6 @@ import { Input } from '@/components/ui/input'
 // import { type Branch } from '@/modules/company/models/branch.model'
 // import { GENDER } from '@/utils'
 // import { type Role } from '@/modules/auth/models/role.model'
-import Pagination from '@/components/shared/pagination'
-import Skeleton from '@/components/shared/skeleton'
 import { useDeleteResource, useGetAllResource } from '@/hooks/useCrud'
 import { ENDPOINTS } from '@/utils'
 import { toast } from 'sonner'
@@ -34,7 +32,7 @@ const UserPage = (): JSX.Element => {
     { label: 'Clientes' }
   ])
   const navigate = useNavigate()
-  const { allResource: allUsers, countData, isLoading, mutate, filterOptions, newPage, prevPage, setOffset } = useGetAllResource(ENDPOINTS.CLIENTES)
+  const { allResource: allUsers, isLoading, mutate, } = useGetAllResource(ENDPOINTS.CLIENTES)
   const { deleteResource: deleteUser } = useDeleteResource(ENDPOINTS.USER)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [, setSearchProduct] = useState('')
@@ -116,7 +114,7 @@ const UserPage = (): JSX.Element => {
               </TableHeader>
               <TableBody>
                 {isLoading
-                  ? <Skeleton rows={filterOptions.limit} columns={8} />
+                  ? <div>Cargando</div>
                   : allUsers?.map((user: Cliente) => (
                       <TableRow key={user.id}>
                         <TableCell>{user.nombre}</TableCell>
@@ -186,7 +184,7 @@ const UserPage = (): JSX.Element => {
           </div>
         </CardContent>
         <CardFooter className='w-full'>
-          <Pagination
+          {/* <Pagination
             allItems={countData ?? 0}
             currentItems={allUsers?.length ?? 0}
             limit={filterOptions.limit}
@@ -196,7 +194,7 @@ const UserPage = (): JSX.Element => {
             setOffset={setOffset}
             setLimit={() => { }}
             params={true}
-          />
+          /> */}
         </CardFooter>
       </Card>
     </section>

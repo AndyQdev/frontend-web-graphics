@@ -2,7 +2,6 @@ import useSWRMutation from 'swr/mutation'
 import { API_BASEURL } from '@/utils'
 import { type ResponseError } from '@/utils/response-error.utils'
 import useSWR from 'swr'
-import { filterStateDefault, useFilterData } from '@/hooks/useFilterData'
 import { type ApiResponse } from '@/models'
 import { createResource, deleteResource, getAllResource, getResource, updateResource } from '@/services/crud.service'
 

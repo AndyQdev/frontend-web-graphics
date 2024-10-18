@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import Navigation from './navigation'
 // import logo from '@assets/images/logoW.webp'
-import { PanelLeftCloseIcon, PanelLeftOpenIcon, ShoppingBag } from 'lucide-react'
+import { BarChart, PanelLeftCloseIcon, PanelLeftOpenIcon, } from 'lucide-react'
 import { useSidebar } from '@/context/siderbarContext'
 import { CardTitle } from '@/components/ui/card'
 
@@ -15,8 +15,8 @@ const Aside = () => {
         className={'h-14 border-b lg:h-[60px] border-secondary bg-dark-primary-foreground flex gap-3 px-4 items-center justify-center relative shrink-0 text-light-text-primary dark:text-dark-text-primary font-medium text-lg'}
       >
         <div className={`${isContract ? 'hidden' : ''} flex items-center gap-3 w-full justify-center px-4`}>
-          <ShoppingBag className='text-light-primary'/>
-          <CardTitle>FashionScape</CardTitle>
+          <BarChart className='text-light-primary'/>
+          <CardTitle>GRAPHICS</CardTitle>
         </div>
         <Button
           variant='ghost'

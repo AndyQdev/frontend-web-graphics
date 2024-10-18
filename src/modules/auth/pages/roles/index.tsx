@@ -36,7 +36,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 // import { toast } from 'sonner'
 import { useState } from 'react'
 import { useGetAllResource } from '@/hooks/useCrud'
-import Pagination from '@/components/shared/pagination'
 
 const RolesPage = (): JSX.Element => {
   useHeader([
@@ -45,7 +44,7 @@ const RolesPage = (): JSX.Element => {
     { label: 'Roles' }
   ])
   const navigate = useNavigate()
-  const { allResource: allRoles, countData, isLoading, filterOptions, newPage, prevPage, setOffset } = useGetAllResource(ENDPOINTS.BRANCH)
+  const { allResource: allRoles, isLoading } = useGetAllResource(ENDPOINTS.BRANCH)
   // const { deleteRole, error } = useDeleteRole()
   console.log(allRoles)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -190,7 +189,7 @@ const RolesPage = (): JSX.Element => {
             {isLoading && <div className='grid place-content-center place-items-center w-full shrink-0 pt-6'><Loading /></div>}
           </CardContent>
           <CardFooter className='w-full'>
-          <Pagination
+          {/* <Pagination
             allItems={countData ?? 0}
             currentItems={allRoles?.length ?? 0}
             limit={filterOptions.limit}
@@ -200,7 +199,7 @@ const RolesPage = (): JSX.Element => {
             setOffset={setOffset}
             setLimit={() => { }}
             params={true}
-          />
+          /> */}
         </CardFooter>
         </Card>
       </div>
