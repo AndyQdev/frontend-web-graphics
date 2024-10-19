@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
       } catch (error) {
         removeStorage(STORAGE_TOKEN)
         removeStorage(STORAGE_USER)
-        setStatus(authStatus.unauthenticated)
+        setStatus(authStatus.authenticated)
         dispatch(resetUser())
       }
     }
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
     removeStorage(STORAGE_TOKEN)
     removeStorage(STORAGE_USER)
     dispatch(resetUser())
-    setStatus(authStatus.unauthenticated)
+    setStatus(authStatus.authenticated)
   }
   // signWithEmailPassword (Inicio de sesión):
   const signWithEmailPassword = async (formData: AuthLogin) => {
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
       } else {
         setError([error.errorInfo?.message ?? 'Servicio no disponible, intente más tarde.'])
       }
-      setStatus(authStatus.unauthenticated)
+      setStatus(authStatus.authenticated)
     }
   }
 
