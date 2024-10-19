@@ -19,8 +19,8 @@ export enum PublicRoutes {
 // }
 
 // const UserPage = lazy(() => import('@/pages/user'))
-const DashboardPage = lazy(() => import('@/modules/dashboard/pages/index'))
-const InscritosPage = lazy(() => import('@/modules/dashboard/pages/index'))
+const DashboardPage = lazy(() => import('@/modules/dashboard/pages/inscritos'))
+const InscritosPage = lazy(() => import('@/modules/dashboard/pages/inscritos'))
 const ComparacionPage = lazy(() => import('@/modules/dashboard/pages/comparation'))
 
 const NotFound = lazy(() => import('@/components/not-found'))
