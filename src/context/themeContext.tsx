@@ -27,12 +27,15 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   useLayoutEffect(() => {
     const root = window.document.documentElement
 
-    root.classList.remove('light', 'dark')
+    // root.classList.remove('light', 'dark')
+    root.classList.remove('light', 'light')
 
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+      const systemTheme = window.matchMedia('(prefers-color-scheme: light)')
+      // const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
         .matches
-        ? 'dark'
+        // ? 'dark'
+        ? 'light'
         : 'light'
 
       root.classList.add(systemTheme)

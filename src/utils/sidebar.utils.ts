@@ -30,54 +30,54 @@ export const MenuSideBar: MenuHeaderRoute[] = [
         icon: createElement(BarChart, { width: 20, height: 20 }),
         permissions: [PERMISSION.USER, PERMISSION.USER_SHOW]
       },
-      {
-        path: PrivateRoutes.PORCENTAJE,
-        label: 'Porcentajes',
-        icon: createElement(PieChart, { width: 20, height: 20 }),
-        permissions: [PERMISSION.ROLE, PERMISSION.ROLE_SHOW]
-      }
+      // {
+      //   path: PrivateRoutes.PORCENTAJE,
+      //   label: 'Porcentajes',
+      //   icon: createElement(PieChart, { width: 20, height: 20 }),
+      //   permissions: [PERMISSION.ROLE, PERMISSION.ROLE_SHOW]
+      // }
     ]
   },
-  {
-    label: 'Facultades',
-    icon: createElement(School, { width: 20, height: 20 }),
-    path: PrivateRoutes.FACULTAD,
-    permissions: [PERMISSION.PRODUCT, PERMISSION.PRODUCT_SHOW, PERMISSION.CATEGORY, PERMISSION.CATEGORY_SHOW],
-    // children: [
-    //   {
-    //     path: PrivateRoutes.PRODUCT,
-    //     label: 'Productos',
-    //     icon: createElement(PackageIcon, { width: 20, height: 20 }),
-    //     permissions: [PERMISSION.PRODUCT, PERMISSION.PRODUCT_SHOW]
-    //   },
-    //   {
-    //     path: PrivateRoutes.CATEGORY,
-    //     label: 'Categorías',
-    //     icon: createElement(Tag, { width: 20, height: 20 }),
-    //     permissions: [PERMISSION.CATEGORY, PERMISSION.CATEGORY_SHOW]
-    //   },
-    //   {
-    //     path: PrivateRoutes.RESERVAS,
-    //     label: 'Reservas',
-    //     icon: createElement(CalendarClock, { width: 20, height: 20 }),
-    //     permissions: [PERMISSION.CATEGORY, PERMISSION.CATEGORY_SHOW]
-    //   }
-    // ]
-  },
-  {
-    label: 'Carreras',
-    icon: createElement(LibraryBig, { width: 20, height: 20 }),
-    path: PrivateRoutes.CARRERA,
-    permissions: [PERMISSION.PURCHASE_ORDER, PERMISSION.PURCHASE_ORDER_SHOW],
-    // children: [
-    //   {
-    //     path: PrivateRoutes.PURCHASE_ORDER,
-    //     label: 'Ordenes',
-    //     icon: createElement(ShoppingCart, { width: 20, height: 20 }),
-    //     permissions: [PERMISSION.PURCHASE_ORDER, PERMISSION.PURCHASE_ORDER_SHOW]
-    //   }
-    // ]
-  },
+  // {
+  //   label: 'Facultades',
+  //   icon: createElement(School, { width: 20, height: 20 }),
+  //   path: PrivateRoutes.FACULTAD,
+  //   permissions: [PERMISSION.PRODUCT, PERMISSION.PRODUCT_SHOW, PERMISSION.CATEGORY, PERMISSION.CATEGORY_SHOW],
+  //   // children: [
+  //   //   {
+  //   //     path: PrivateRoutes.PRODUCT,
+  //   //     label: 'Productos',
+  //   //     icon: createElement(PackageIcon, { width: 20, height: 20 }),
+  //   //     permissions: [PERMISSION.PRODUCT, PERMISSION.PRODUCT_SHOW]
+  //   //   },
+  //   //   {
+  //   //     path: PrivateRoutes.CATEGORY,
+  //   //     label: 'Categorías',
+  //   //     icon: createElement(Tag, { width: 20, height: 20 }),
+  //   //     permissions: [PERMISSION.CATEGORY, PERMISSION.CATEGORY_SHOW]
+  //   //   },
+  //   //   {
+  //   //     path: PrivateRoutes.RESERVAS,
+  //   //     label: 'Reservas',
+  //   //     icon: createElement(CalendarClock, { width: 20, height: 20 }),
+  //   //     permissions: [PERMISSION.CATEGORY, PERMISSION.CATEGORY_SHOW]
+  //   //   }
+  //   // ]
+  // },
+  // {
+  //   label: 'Carreras',
+  //   icon: createElement(LibraryBig, { width: 20, height: 20 }),
+  //   path: PrivateRoutes.CARRERA,
+  //   permissions: [PERMISSION.PURCHASE_ORDER, PERMISSION.PURCHASE_ORDER_SHOW],
+  //   // children: [
+  //   //   {
+  //   //     path: PrivateRoutes.PURCHASE_ORDER,
+  //   //     label: 'Ordenes',
+  //   //     icon: createElement(ShoppingCart, { width: 20, height: 20 }),
+  //   //     permissions: [PERMISSION.PURCHASE_ORDER, PERMISSION.PURCHASE_ORDER_SHOW]
+  //   //   }
+  //   // ]
+  // },
   // {
   //   label: 'Administracion',
   //   icon: createElement(Building2Icon, { width: 20, height: 20 }),
