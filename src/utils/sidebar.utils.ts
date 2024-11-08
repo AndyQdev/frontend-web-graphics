@@ -1,6 +1,6 @@
 import { PrivateRoutes } from '@/models/routes.model'
 import { PERMISSION } from '@/modules/auth/utils/permissions.constants'
-import { BarChart, HomeIcon,  PieChart, School,  Users, LibraryBig} from 'lucide-react'
+import { BarChart, HomeIcon, Users} from 'lucide-react'
 import { createElement } from 'react'
 
 export interface MenuHeaderRoute {
