@@ -17,6 +17,7 @@ export const ENDPOINTS = {
   CARRERA: '/api/carreras',
   FACULTAD: '/api/facultades',
   ESTADISTICA_ACADEMICA: '/api/estadisticas-academicas',
+  RENDIMINETO_ACADEMICO: '/api/rendimiento-academico',
 
   // administracion
   BRANCH: '/api/branch',

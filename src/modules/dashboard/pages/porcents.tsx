@@ -28,6 +28,7 @@ import {
   import { useGetAllResource } from '@/hooks/useCrud';
   import { ENDPOINTS } from '@/utils';
   import { useState } from 'react';
+import { RendimientoAcademico } from '../models/rendimiento.model';
   const locadidades: string[] = [
       'SANTA CRUZ',
       'MONTERO',
@@ -58,23 +59,21 @@ import {
   
       //http://localhost:3000/api/estadisticas-academicas/filter?periodo=2019-1&localidad=SANTA CRUZ&facultad=05 CIENCIAS EXACTAS Y
       const { allResource: allEstadisticas} = useGetAllResource(
-          `${ENDPOINTS.ESTADISTICA_ACADEMICA}/filter?periodo=${selectedPeriod}&localidad=${selectedLocation}&facultad=${selectedFaculty}&modalidad=${selectedModalidad}`
+          `${ENDPOINTS.RENDIMINETO_ACADEMICO}/filter?periodo=${selectedPeriod}&localidad=${selectedLocation}&facultad=${selectedFaculty}&modalidad=${selectedModalidad}`
       )
       const { allResource: allFacultades} = useGetAllResource(ENDPOINTS.FACULTAD)
       const allPeriods = ["2019-1", "2019-2", "2020-1"];
 
       // const facultad: Facultad[] = allFacultades
       const totalCount = allEstadisticas.reduce((acc: any, data: any) => {
-          if (selectedCantidad === 'titulados') {
-              return acc + (data.titulados || 0); // Sumamos 'inscritos_localidad'
-          } else if (selectedCantidad === 'egresados') {
-              return acc + (data.egresados || 0); // Sumamos 'inscritos_facultad'
-          } else if (selectedCantidad === 'inscarreras') {
-              return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
-          }else if (selectedCantidad === 'retirados') {
-              return acc + (data.retirados || 0); // Sumamos 't_ins' (inscritos por carreras)
+          if (selectedCantidad === 'pPPAC') {
+              return acc + (data.ppac || 0); // Sumamos 'inscritos_facultad'
+          } else if (selectedCantidad === 'pPPA1') {
+              return acc + (data.ppa1 || 0); // Sumamos 't_ins' (inscritos por carreras)
+          }else if (selectedCantidad === 'pPPA') {
+              return acc + (data.ppa|| 0); // Sumamos 't_ins' (inscritos por carreras)
           }else {
-              return acc + (data.t_nue || 0); // Por defecto, sumamos 't_nue' (inscritos nuevos)
+              return acc + (data.pps || 0); // Por defecto, sumamos 't_nue' (inscritos nuevos)
           }
       }, 0)
       console.log(allEstadisticas)
@@ -193,10 +192,11 @@ import {
                   >
                       {/* <option value="inslocalidad">Inscritos x localidades</option> */}
                       {/* <option value="insfacultad">Inscritos x facultades</option> */}
-                      <option value="pDesertores">Porcentaje Desertores</option>
-                      <option value="pPPS">Porcentaje de PPS</option>
-                      <option value="pPPAC">Porcentaje de PPAC</option>
-                      <option value="pPPAC1">Porcentaje de PPAC1</option>
+                      {/* <option value="pDesertores">Porcentaje Desertores</option> */}
+                      <option value="pPPS">PPS</option>
+                      <option value="pPPAC">PPAC</option>
+                      <option value="pPPA1">PPA1</option>
+                      <option value="pPPA">PPA</option>
                       
                       {/* Agregar más facultades aquí */}
                   </select>
@@ -206,7 +206,7 @@ import {
             
           </thead>
           <tbody>
-            {allEstadisticas.map((data: any, index:number) => (
+            {allEstadisticas.map((data:RendimientoAcademico, index:number) => (
               <tr key={index} className="border-b">
                   {
                       selectedEtiqueta === 'periodo' ? (
@@ -223,10 +223,10 @@ import {
                           <td className="px-4 py-2 text-sm text-right text-gray-700">{data.pps}</td>
                       ) : selectedCantidad === 'pPPAC' ? (
                           <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppac}</td>
-                      ) : selectedCantidad === 'pPPAC1' ? (
-                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppac1}</td>
+                      ) : selectedCantidad === 'pPPA1' ? (
+                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppa1}</td>
                       ) : (
-                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.t_nue}</td>
+                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppa }</td>
                       )
                   }
               </tr>
@@ -249,13 +249,13 @@ import {
               <CardTitle className="text-4xl tabular-nums">
               {
                   selectedCantidad === 'pPPS' ? (
-                      'PorPorcentaje de PPS'
+                      'Porcentaje de PPS'
                   ) : selectedCantidad === 'pPPAC' ? (
                       'Porcentaje de PPAC'
-                  ) : selectedCantidad === 'pPPAC1' ? (
-                      'Porcentaje de PPAC1'
+                  ) : selectedCantidad === 'pPPA1' ? (
+                      'Porcentaje de PPA1'
                   ) : (
-                      'Inscritos nuevos'
+                      'Porcentaje de PPA'
                   )
               }
               </CardTitle>
@@ -277,7 +277,7 @@ import {
                               right: -4,
                               bottom: 60,  // Aumentamos el margen inferior para más espacio
                           }}
-                          data={allEstadisticas.map((data: any) => ({
+                          data={allEstadisticas.map((data:RendimientoAcademico) => ({
                               // Mapeo dinámico de las etiquetas
                               etiqueta:
                                   selectedEtiqueta === 'periodo'
@@ -292,9 +292,9 @@ import {
                                   ? data.pps
                                   : selectedCantidad === 'pPPAC'
                                   ? data.ppac
-                                  : selectedCantidad === 'pPPAC1'
-                                  ? data.ppac1
-                                  : data.t_nue,
+                                  : selectedCantidad === 'pPPA1'
+                                  ? data.ppa1
+                                  : data.ppa,
                           }))}
                       >
                           <Bar
@@ -363,7 +363,7 @@ import {
                   <ResponsiveContainer width="100%" height={400}>
                       <AreaChart
                       accessibilityLayer
-                      data={allEstadisticas.map((data: any) => ({
+                      data={allEstadisticas.map((data: RendimientoAcademico) => ({
                               // Mapeo dinámico de las etiquetas
                               etiqueta:
                                   selectedEtiqueta === 'periodo'
@@ -378,9 +378,9 @@ import {
                                   ? data.pps
                                   : selectedCantidad === 'pPPAC'
                                   ? data.ppac
-                                  : selectedCantidad === 'pPPAC1'
-                                  ? data.ppac1
-                                  : data.t_nue,
+                                  : selectedCantidad === 'pPPA1'
+                                  ? data.ppa1
+                                  : data.ppa,
                           }))}
                       margin={{
                           left: 0,

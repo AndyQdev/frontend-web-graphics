@@ -1,6 +1,6 @@
 import { PrivateRoutes } from '@/models/routes.model'
 import { PERMISSION } from '@/modules/auth/utils/permissions.constants'
-import { BarChart, HomeIcon, Users} from 'lucide-react'
+import { BarChart, HomeIcon, PieChart, Users} from 'lucide-react'
 import { createElement } from 'react'
 
 export interface MenuHeaderRoute {
@@ -30,12 +30,12 @@ export const MenuSideBar: MenuHeaderRoute[] = [
         icon: createElement(BarChart, { width: 20, height: 20 }),
         permissions: [PERMISSION.USER, PERMISSION.USER_SHOW]
       },
-      // {
-      //   path: PrivateRoutes.PORCENTAJE,
-      //   label: 'Porcentajes',
-      //   icon: createElement(PieChart, { width: 20, height: 20 }),
-      //   permissions: [PERMISSION.ROLE, PERMISSION.ROLE_SHOW]
-      // }
+      {
+        path: PrivateRoutes.PORCENTAJE,
+        label: 'Porcentajes',
+        icon: createElement(PieChart, { width: 20, height: 20 }),
+        permissions: [PERMISSION.ROLE, PERMISSION.ROLE_SHOW]
+      }
     ]
   },
   // {
