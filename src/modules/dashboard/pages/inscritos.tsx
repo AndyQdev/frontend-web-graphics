@@ -154,8 +154,8 @@ const Charts = (): JSX.Element => {
       </div>
 
       {/* Tabla de datos */}
-      <table className="min-w-full bg-white border border-gray-200 table-fixed">
-        <thead className="bg-gray-100 border-b w-full">
+      <table className="min-w-full bg-white border border-gray-200 dark:border-slate-800 dark:bg-slate-800 table-fixed">
+        <thead className="bg-gray-100 border-b w-full dark:bg-slate-800">
           <tr className='w-full"'>
             <th className="w-1/2 px-2">
                 <label htmlFor="faculty" className="block text-sm font-medium">
@@ -203,30 +203,30 @@ const Charts = (): JSX.Element => {
             <tr key={index} className="border-b">
                 {
                     selectedEtiqueta === 'localidad' ? (
-                        <td className="px-4 py-2 text-sm text-gray-700">{data.localidad}</td>
+                        <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.localidad}</td>
                     ) : selectedEtiqueta === 'facultad' ? (
-                        <td className="px-4 py-2 text-sm text-gray-700">{data.nombre_facultad}</td>
+                        <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_facultad}</td>
                     ) : (
-                        <td className="px-4 py-2 text-sm text-gray-700">{data.nombre_carrera}</td>
+                        <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_carrera}</td>
                     )
                 }
                 {
                     selectedCantidad === 'titulados' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.titulados}</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.titulados}</td>
                     ) : selectedCantidad === 'egresados' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.egresados}</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.egresados}</td>
                     ) : selectedCantidad === 'inscarreras' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.t_ins}</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_ins}</td>
                     ) : selectedCantidad === 'retirados' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.retirados}</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.retirados}</td>
                     ) : (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700">{data.t_nue}</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_nue}</td>
                     )
                 }
             </tr>
           ))}
           {/* Total general */}
-          <tr className="bg-gray-200 font-bold">
+          <tr className="bg-gray-200 font-bold dark:bg-slate-800">
             <td className="px-4 py-2 text-sm">Total general</td>
             <td className="px-4 py-2 text-sm text-right">{totalCount.toLocaleString()}</td>
           </tr>

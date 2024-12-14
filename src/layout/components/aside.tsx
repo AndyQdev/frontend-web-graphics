@@ -9,7 +9,7 @@ const Aside = () => {
   const { isContract, toggleContract } = useSidebar()
 
   return (
-    <aside className='hidden md:flex md:flex-col h-[100dvh] relative border-r bg-background border bg-light-bg-primary'>
+    <aside className='hidden md:flex md:flex-col h-[100dvh] relative border-r bg-background border bg-light-bg-primary dark:bg-dark-bg-primary'>
     {/* <aside className='hidden md:flex md:flex-col h-[100dvh] relative border-r dark:bg-dark-bg-secondary bg-light-bg-primary'> */}
       <div
         className={'h-14 border-b lg:h-[60px] border-secondary bg-dark-primary-foreground flex gap-3 px-4 items-center justify-center relative shrink-0 text-light-text-primary dark:text-dark-text-primary font-medium text-lg'}

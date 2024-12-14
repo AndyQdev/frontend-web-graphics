@@ -13,7 +13,7 @@ const Layout = () => {
       <Aside />
       <div className='max-h-[100dvh overflow-hidden]'>
         <Header />
-        <div className='flex flex-row w-full h-[calc(100dvh-56px)] lg:h-[calc(100dvh-60px)] relative overflow-hidden bg-light-bg-secondary dark:bg-dark-bg-primary'>
+        <div className='flex flex-row w-full h-[calc(100dvh-56px)] lg:h-[calc(100dvh-60px)] relative overflow-hidden bg-light-bg-secondary dark:bg-dark-bg-primary/100'>
           {/* <Aside /> */}
           <MainPage>
             <Outlet />

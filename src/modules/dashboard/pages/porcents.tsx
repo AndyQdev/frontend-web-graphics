@@ -161,9 +161,9 @@ import { RendimientoAcademico } from '../models/rendimiento.model';
         </div>
   
         {/* Tabla de datos */}
-        <table className="min-w-full bg-white border border-gray-200 table-fixed">
-          <thead className="bg-gray-100 border-b w-full">
-            <tr className='w-full"'>
+        <table className="min-w-full border table-fixed">
+          <thead className="dark:bg-slate-800 border-b w-full">
+            <tr className="w-full dark:bg-slate-800">
               <th className="w-1/2 px-2">
                   <label htmlFor="faculty" className="block text-sm font-medium">
                       Etiquetas de fila
@@ -210,29 +210,29 @@ import { RendimientoAcademico } from '../models/rendimiento.model';
               <tr key={index} className="border-b">
                   {
                       selectedEtiqueta === 'periodo' ? (
-                          <td className="px-4 py-2 text-sm text-gray-700">{data.periodo}</td>
+                          <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.periodo}</td>
                       ) : selectedEtiqueta === 'facultad' ? (
-                          <td className="px-4 py-2 text-sm text-gray-700">{data.nombre_facultad}</td>
+                          <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_facultad}</td>
                       ) : (
-                          <td className="px-4 py-2 text-sm text-gray-700">{data.nombre_carrera}</td>
+                          <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_carrera}</td>
                       )
                   }
                    
                   {
                       selectedCantidad === 'pPPS' ? (
-                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.pps}</td>
+                          <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.pps}</td>
                       ) : selectedCantidad === 'pPPAC' ? (
-                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppac}</td>
+                          <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.ppac}</td>
                       ) : selectedCantidad === 'pPPA1' ? (
-                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppa1}</td>
+                          <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.ppa1}</td>
                       ) : (
-                          <td className="px-4 py-2 text-sm text-right text-gray-700">{data.ppa }</td>
+                          <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.ppa }</td>
                       )
                   }
               </tr>
             ))}
             {/* Total general */}
-            <tr className="bg-gray-200 font-bold">
+            <tr className="bg-gray-200 font-bold dark:bg-slate-800">
               <td className="px-4 py-2 text-sm">Total general</td>
               <td className="px-4 py-2 text-sm text-right">{totalCount.toLocaleString()}</td>
             </tr>

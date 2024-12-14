@@ -9,6 +9,7 @@ import Navigation from './navigation'
 import { useHeader } from '@/hooks/useHeader'
 import { PrivateRoutes } from '@/models/routes.model'
 import { DialogTitle } from '@radix-ui/react-dialog'
+import { ModeToggle } from '@/components/mode-toggle'
 
 const Header = () => {
   const { breadcrumb } = useHeader()
@@ -16,7 +17,7 @@ const Header = () => {
   const navigate = useNavigate()
 
   return (
-    <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6 bg-background border-secondary dark:bg-black">
+    <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6 bg-background border-secondary dark:bg-dark-bg-primary">
       <Sheet>
         <SheetTrigger asChild>
           <Button
@@ -57,8 +58,9 @@ const Header = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+      <ModeToggle />
       {/* <Notificaciones></Notificaciones> */}
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <CircleUser className="h-5 w-5" />
@@ -77,13 +79,12 @@ const Header = () => {
             Configuración
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {/* onClick={signOut} */}
           <DropdownMenuItem className='cursor-pointer'>
             <LogOut className="mr-2 h-4 w-4" />
             Cerrar sesión
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </header>
   )
 }

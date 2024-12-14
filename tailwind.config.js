@@ -54,7 +54,7 @@ module.exports = {
         // dark mode
         'dark-text-primary': '#FAFAFA',
         'dark-text-secondary': '#A1A1AA',
-        'dark-bg-primary': '#09090b',
+        'dark-bg-primary': '#111827',
         'dark-bg-secondary': '#151518',
         'dark-border': '#b8c0cc33',
         'dark-action': '#FAFAFA',
