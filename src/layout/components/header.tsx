@@ -1,20 +1,17 @@
-import { CircleUser, LogOut, Menu, Settings, User } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import {  Menu } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui/sheet'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import Navigation from './navigation'
 import { useHeader } from '@/hooks/useHeader'
-import { PrivateRoutes } from '@/models/routes.model'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { ModeToggle } from '@/components/mode-toggle'
 
 const Header = () => {
   const { breadcrumb } = useHeader()
   // const { signOut } = useAuth()
-  const navigate = useNavigate()
 
   return (
     <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6 bg-background border-secondary dark:bg-dark-bg-primary">
