@@ -61,10 +61,10 @@ function Navigation() {
                   >
                     <div
                       className={`${selectedMenu.includes(item.path!)
-                        ? 'text-light-secondary  dark:text-dark-text-primary text-primary font-semibold bg-light-primary'
+                        ? 'text-light-secondary  dark:text-dark-text-primary text-primary font-semibold bg-light-primary dark:hover:bg-light-primary/90'
                         : 'text-light-text-secondary dark:text-dark-text-secondary'}
                       ${isContract && selectedMenu.includes(item.path!) ? 'hover:bg-light-primary/90 dark:bg-dark-border' : ''}
-                      h-10 flex items-center justify-between gap-3 rounded-md pl-4 pr-2 py-2 transition-all w-full ${selectedMenu.includes(item.path!) ? 'hover:bg-light-primary/90' : 'hover:bg-light-primary/'} hover:dark:bg-dark-border text-base font-normal`}
+                      h-10 flex items-center justify-between gap-3 rounded-md pl-4 pr-2 py-2 transition-all w-full ${selectedMenu.includes(item.path!) ? 'hover:bg-light-primary/90' : 'hover:bg-light-primary/ '} hover:dark:bg-dark-border text-base font-normal`}
                     >
                       <div className='flex items-center gap-3 w-full overflow-hidden [&>svg]:shrink-0'>
                         {item.icon}
@@ -117,7 +117,7 @@ function Navigation() {
       <section className='border-t p-4'>
         <Link
           to={PrivateRoutes.SETTINGS}
-          className={`${selectedMenu === PrivateRoutes.SETTINGS ? 'text-light-bg-primary bg-light-primary  dark:text-primary hover:bg-border dark:bg-dark-border font-semibold' : 'text-black dark:text-secondary'} h-10 text-light-bg-primary bg-light-primary hover:bg-light-primary/90 flex items-center gap-3 rounded-md px-4 py-2 transition-all w-full hover:bg-secondary hover:dark:bg-dark-border text-base font-normal`}
+          className={`${selectedMenu === PrivateRoutes.SETTINGS ? 'text-light-bg-primary bg-light-primary  dark:text-primary hover:bg-border dark:bg-dark-border font-semibold' : 'text-black dark:text-secondary'} h-10 text-light-bg-primary bg-light-primary hover:bg-light-primary/90 dark:hover:bg-light-primary/90 flex items-center gap-3 rounded-md px-4 py-2 transition-all w-full hover:bg-secondary hover:dark:bg-dark-border text-base font-normal`}
         >
           <SettingsIcon width={22} height={22} />
           <span className={isContract ? 'hidden' : ''}>Configuración</span>

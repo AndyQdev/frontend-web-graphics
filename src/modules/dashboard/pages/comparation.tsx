@@ -28,6 +28,8 @@ import {
   import { useGetAllResource } from '@/hooks/useCrud';
   import { ENDPOINTS } from '@/utils';
   import { useState } from 'react';
+import { SkeletonTable } from '@/components/skeleton-table';
+import { SkeletonBarChart } from '@/components/skeleton-card1';
   const locadidades: string[] = [
       'SANTA CRUZ',
       'MONTERO',
@@ -58,8 +60,8 @@ import {
       const [selectedCantidad2, setSelectedCantidad2] = useState('titulados');
   
       //http://localhost:3000/api/estadisticas-academicas/filter?periodo=2019-1&localidad=SANTA CRUZ&facultad=05 CIENCIAS EXACTAS Y
-      const { allResource: allEstadisticas} = useGetAllResource(
-          `${ENDPOINTS.ESTADISTICA_ACADEMICA}/filter?periodo=${selectedPeriod}&localidad=${selectedLocation}&facultad=${selectedFaculty}&modalidad=${selectedModalidad}`
+      const { allResource: allEstadisticas, isLoading} = useGetAllResource(
+          `${ENDPOINTS.ESTADISTICA_ACADEMICA}/filter?periodo=${selectedPeriod}&localidad=${selectedLocation}&facultad=${selectedFaculty}&modalidad=${selectedModalidad}&etiquetaFila=${selectedEtiqueta}`
       )
       const { allResource: allFacultades} = useGetAllResource(ENDPOINTS.FACULTAD)
       // const facultad: Facultad[] = allFacultades
@@ -70,8 +72,18 @@ import {
               return acc + (data.egresados || 0); // Sumamos 'inscritos_facultad'
           } else if (selectedCantidad === 'inscarreras') {
               return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
+          } else if (selectedCantidad === 'todos') {
+                return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
           }else if (selectedCantidad === 'retirados') {
               return acc + (data.retirados || 0); // Sumamos 't_ins' (inscritos por carreras)
+          } else if (selectedCantidad === 'aprobados') {
+                return acc + (data.porcentaje_aprobados || 0); // Sumamos 'inscritos_facultad'
+          } else if (selectedCantidad === 'reprobados') {
+                return acc + (data.porcentaje_reprobados || 0); // Sumamos 't_ins' (inscritos por carreras)
+          } else if (selectedCantidad === 'sinNota') {
+                  return acc + (data.porcentaje_sin_nota || 0); // Sumamos 't_ins' (inscritos por carreras)
+          }else if (selectedCantidad === 'reprobados0') {
+                return acc + (data.porcentaje_reprobados_con_0 || 0); // Sumamos 't_ins' (inscritos por carreras)  
           }else {
               return acc + (data.t_nue || 0); // Por defecto, sumamos 't_nue' (inscritos nuevos)
           }
@@ -83,8 +95,19 @@ import {
             return acc + (data.egresados || 0); // Sumamos 'inscritos_facultad'
         } else if (selectedCantidad2 === 'inscarreras') {
             return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
+        } else if (selectedCantidad2 === 'todos') {
+            return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
         }else if (selectedCantidad2 === 'retirados') {
             return acc + (data.retirados || 0); // Sumamos 't_ins' (inscritos por carreras)
+        } else if (selectedCantidad2 === 'aprobados') {
+            return acc + (data.porcentaje_aprobados || 0); // Sumamos 'inscritos_facultad'
+        } else if (selectedCantidad2 === 'reprobados') {
+            return acc + (data.porcentaje_reprobados || 0); // Sumamos 't_ins' (inscritos por carreras)
+        } else if (selectedCantidad2 === 'sinNota') {
+              return acc + (data.porcentaje_sin_nota || 0); // Sumamos 't_ins' (inscritos por carreras)
+        }else if (selectedCantidad2 === 'reprobados0') {
+            return acc + (data.porcentaje_reprobados_con_0 || 0); // Sumamos 't_ins' (inscritos por carreras)  
+      
         }else {
             return acc + (data.t_nue || 0); // Por defecto, sumamos 't_nue' (inscritos nuevos)
         }
@@ -109,11 +132,11 @@ import {
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
             >
-              {/* <option value="Todas">Todas</option> */}
+              <option value="Todas">Todas</option>
               <option value="2019-1">2019-1</option>
               <option value="2019-2">2019-2</option>
               <option value="2020-1">2020-1</option>
-              <option value="2020-2">2020-2</option>
+              {/* <option value="2020-2">2020-2</option> */}
               
             </select>
           </div>
@@ -128,7 +151,7 @@ import {
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
             >
-              {/* <option value="Todas">Todas</option> */}
+              <option value="Todas">Todas</option>
               {locadidades.map((locadidad, index) => {
                   return <option key={index} value={locadidad}>{locadidad}</option>
               })}
@@ -160,7 +183,7 @@ import {
                   value={selectedModalidad}
                   onChange={(e) => setSelectedModalidad(e.target.value)}
               >
-                  {/* <option value="Todas">Todas</option> */}
+                  <option value="Todas">Todas</option>
                   <option value="PRESENCIAL">PRESENCIAL</option>
                   <option value="VIRTUAL">VIRTUAL</option>
               </select>
@@ -185,6 +208,7 @@ import {
                       <option value="carreras">Carreras</option>
                       <option value="localidad">Localidad</option>
                       <option value="facultad">Facultad</option>
+                      <option value="periodo">Periodo</option>
                       {/* Agregar más facultades aquí */}
                   </select>
               </th>
@@ -200,12 +224,16 @@ import {
                   >
                       {/* <option value="inslocalidad">Inscritos x localidades</option> */}
                       {/* <option value="insfacultad">Inscritos x facultades</option> */}
+                      <option value="todos">Todos</option>
                       <option value="inscarreras">Inscritos x carreras</option>
                       <option value="newinscritos">Inscritos nuevos</option>
                       <option value="titulados">Titulados</option>
                       <option value="egresados">Egresados</option>
                       <option value="retirados">Retirados</option>
-                      
+                      <option value="sinNota">%Sin Nota</option>
+                      <option value="aprobados">%Aprobados</option>
+                      <option value="reprobados">%Reprobados</option>
+                      <option value="reprobados0">%Reprobados con 0</option>
                       {/* Agregar más facultades aquí */}
                   </select>
               </th>
@@ -221,57 +249,89 @@ import {
                   >
                       {/* <option value="inslocalidad">Inscritos x localidades</option> */}
                       {/* <option value="insfacultad">Inscritos x facultades</option> */}
+                      <option value="todos">Todos</option>
                       <option value="inscarreras">Inscritos x carreras</option>
                       <option value="newinscritos">Inscritos nuevos</option>
                       <option value="titulados">Titulados</option>
                       <option value="egresados">Egresados</option>
                       <option value="retirados">Retirados</option>
-                      
+                      <option value="sinNota">%Sin Nota</option>
+                      <option value="aprobados">%Aprobados</option>
+                      <option value="reprobados">%Reprobados</option>
+                      <option value="reprobados0">%Reprobados con 0</option>
+
+                      {/* <option value="reprobados">%Reprobados</option> */}
                       {/* Agregar más facultades aquí */}
                   </select>
               </th>
             </tr>
           </thead>
           <tbody>
-            {allEstadisticas.map((data: any, index:number) => (
-              <tr key={index} className="border-b">
-                  {
-                      selectedEtiqueta === 'localidad' ? (
-                          <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.localidad}</td>
-                      ) : selectedEtiqueta === 'facultad' ? (
-                          <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_facultad}</td>
-                      ) : (
-                          <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_carrera}</td>
-                      )
-                  }
-                  {
-                      selectedCantidad === 'titulados' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.titulados}</td>
-                      ) : selectedCantidad === 'egresados' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.egresados}</td>
-                      ) : selectedCantidad === 'inscarreras' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_ins}</td>
-                      ) : selectedCantidad === 'retirados' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.retirados}</td>
-                      ) : (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_nue}</td>
-                      )
-                  }
-                  {
-                      selectedCantidad2 === 'titulados' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.titulados}</td>
-                      ) : selectedCantidad2 === 'egresados' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.egresados}</td>
-                      ) : selectedCantidad2 === 'inscarreras' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_ins}</td>
-                      ) : selectedCantidad2 === 'retirados' ? (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.retirados}</td>
-                      ) : (
-                          <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_nue}</td>
-                      )
-                  }
-              </tr>
-            ))}
+            {isLoading?(
+                <SkeletonTable rows={12} />
+            ):(
+                allEstadisticas.map((data: any, index:number) => (
+                <tr key={index} className="border-b">
+                    {
+                        selectedEtiqueta === 'localidad' ? (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.localidad}</td>
+                        ) : selectedEtiqueta === 'facultad' ? (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_facultad}</td>
+                        ) : selectedEtiqueta === 'periodo' ? (
+                                <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.periodo}</td>
+                        ) : (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_carrera}</td>
+                        )
+                    }
+                    {
+                        selectedCantidad === 'titulados' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.titulados}</td>
+                        ) : selectedCantidad === 'egresados' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.egresados}</td>
+                        ) : selectedCantidad === 'inscarreras' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_ins}</td>
+                        ) : selectedCantidad === 'todos' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_ins}</td>
+                        ) : selectedCantidad === 'retirados' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.retirados}</td>
+                        ) : selectedCantidad === 'sinNota' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_sin_nota}</td>
+                        ) : selectedCantidad === 'aprobados' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_aprobados}</td>
+                        ) : selectedCantidad === 'reprobados' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_aprobados}</td>  
+                        ) : selectedCantidad === 'reprobados0' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_reprobados_con_0}</td>  
+                        ) : (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_nue}</td>
+                        )
+                    }
+                    {
+                        selectedCantidad2 === 'titulados' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.titulados}</td>
+                        ) : selectedCantidad2 === 'egresados' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.egresados}</td>
+                        ) : selectedCantidad2 === 'inscarreras' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_ins}</td>
+                        ) : selectedCantidad2 === 'todos' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_ins}</td>
+                        ) : selectedCantidad2 === 'retirados' ? (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.retirados}</td>
+                        ) : selectedCantidad2 === 'sinNota' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_sin_nota}</td>
+                        ) : selectedCantidad2 === 'aprobados' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_aprobados}</td>
+                        ) : selectedCantidad2 === 'reprobados' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_aprobados}</td>  
+                        ) : selectedCantidad2 === 'reprobados0' ? (
+                                <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.porcentaje_reprobados_con_0}</td>  
+                        ) : (
+                            <td className="px-4 py-2 text-sm text-center text-gray-700 dark:text-white">{data.t_nue}</td>
+                        )
+                    }
+                </tr>
+                ))
+            )}
             {/* Total general */}
             <tr className="bg-gray-200 font-bold dark:bg-slate-800">
               <td className="px-4 py-2 text-sm">Total general</td>
@@ -290,7 +350,7 @@ import {
         {/* <div className="col-span-full sm:col-span-2 grid gap-6"> */}
         <Card className="" x-chunk="charts-01-chunk-0">
           <CardHeader className="space-y-0 pb-2">
-              <CardTitle className="text-4xl tabular-nums">
+              <CardTitle className="tabular-nums">
               {
                 selectedCantidad === 'titulados' ? (
                     'Estudiantes Titulados'
@@ -300,98 +360,178 @@ import {
                     'Inscritos por carrera'
                 ) : selectedCantidad === 'retirados' ? (
                     'Estudiantes Retirados'
+                ) : selectedCantidad === 'todos' ? (
+                    'Todos los estudiantes'
+                ) : selectedCantidad === 'aprobados' ? (
+                    '%Aprobados'
+                ) : selectedCantidad === 'reprobados' ? (
+                    '%Reprobados'
+                ) : selectedCantidad === 'reprobados0' ? (
+                    '%Reprobados con 0'
+                ) : selectedCantidad === 'sinNota' ? (
+                    '%sin Nota'
                 ) : (
                     'Inscritos nuevos'
+                )
+              } VS
+              {
+                selectedCantidad2 === 'titulados' ? (
+                    ' Estudiantes Titulados'
+                ) : selectedCantidad2 === 'egresados' ? (
+                    ' Estudiantes Egresados'
+                ) : selectedCantidad2 === 'inscarreras' ? (
+                    ' Inscritos por carrera'
+                ) : selectedCantidad2 === 'retirados' ? (
+                    ' Estudiantes Retirados'
+                ) : selectedCantidad2 === 'todos' ? (
+                    ' Todos los estudiantes'
+                ) : selectedCantidad2 === 'aprobados' ? (
+                    ' %Aprobados'
+                ) : selectedCantidad2 === 'reprobados' ? (
+                    ' %Reprobados'
+                ) : selectedCantidad2 === 'reprobados0' ? (
+                    ' %Reprobados con 0'
+                ) : selectedCantidad2 === 'sinNota' ? (
+                    ' %Sin Nota'
+                ) : (
+                    ' Inscritos nuevos'
                 )
               }
               </CardTitle>
           </CardHeader>
           <CardContent>
-              <ChartContainer
-              config={{
-                  inscritos: {
-                      label: 'Inscritos',
-                      color: 'hsl(var(--chart-1))'
-                  }
-              }}
-              >
-                  <ResponsiveContainer width="100%" height={400}>
-                      <BarChart
-                          accessibilityLayer
-                          margin={{
-                              left: -4,
-                              right: -4,
-                          }}
-                          data={allEstadisticas.map((data: any) => ({
-                            // Mapeo dinámico de las etiquetas
-                            etiqueta:
-                              selectedEtiqueta === 'localidad'
-                                ? data.localidad
-                                : selectedEtiqueta === 'facultad'
-                                ? data.nombre_facultad
-                                : data.nombre_carrera,
+              {isLoading?(
+                <SkeletonBarChart />
+              ):(
+
+                <ChartContainer
+                config={{
+                    inscritos: {
+                        label: 'Inscritos',
+                        color: 'hsl(var(--chart-1))'
+                    }
+                }}
+                >
+                    <ResponsiveContainer width="100%" height={400}>
+                        <BarChart
+                            accessibilityLayer
+                            margin={{
+                                left: -4,
+                                right: -4,
+                            }}
+                            data={allEstadisticas.map((data: any) => ({
+                                // Mapeo dinámico de las etiquetas
+                                etiqueta:
+                                selectedEtiqueta === 'localidad'
+                                    ? data.localidad
+                                    : selectedEtiqueta === 'facultad'
+                                    ? data.nombre_facultad
+                                    : selectedEtiqueta === 'periodo'
+                                    ? data.periodo
+                                    : data.nombre_carrera,
+                                
+                                // Primer valor de inscritos según la primera selección del usuario
+                                inscritos1:
+                                selectedCantidad === 'titulados'
+                                    ? data.titulados
+                                    : selectedCantidad === 'egresados'
+                                    ? data.egresados
+                                    : selectedCantidad === 'inscarreras'
+                                    ? data.t_ins
+                                    : selectedCantidad === 'todos'
+                                    ? data.t_ins
+                                    : selectedCantidad === 'retirados'
+                                    ? data.retirados
+                                    : selectedCantidad === 'aprobados'
+                                    ? data.porcentaje_aprobados
+                                    : selectedCantidad === 'reprobados'
+                                    ? data.porcentaje_reprobados
+                                    : selectedCantidad === 'reprobados0'
+                                    ? data.porcentaje_reprobados_con_0
+                                    : selectedCantidad === 'sinNota'
+                                    ? data.porcentaje_sin_nota
+                                    : data.t_nue,
                             
-                            // Primer valor de inscritos según la primera selección del usuario
-                            inscritos1:
-                              selectedCantidad === 'titulados'
-                                ? data.titulados
-                                : selectedCantidad === 'egresados'
-                                ? data.egresados
-                                : selectedCantidad === 'inscarreras'
-                                ? data.t_ins
-                                : selectedCantidad === 'retirados'
-                                ? data.retirados
-                                : data.t_nue,
-                          
-                            // Segundo valor de inscritos según la segunda selección del usuario
-                            inscritos2:
-                              selectedCantidad2 === 'titulados'
-                                ? data.titulados
-                                : selectedCantidad2 === 'egresados'
-                                ? data.egresados
-                                : selectedCantidad2 === 'inscarreras'
-                                ? data.t_ins
-                                : selectedCantidad2 === 'retirados'
-                                ? data.retirados
-                                : data.t_nue,
-                          }))}
-                        >
-                        <XAxis dataKey="etiqueta" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        {/* Primera barra (primer conjunto de datos) */}
-                        <Bar dataKey="inscritos1" fill="#8884d8" name={selectedCantidad === 'titulados' ? (
-                                                                    'Estudiantes Titulados'
-                                                                ) : selectedCantidad === 'egresados' ? (
-                                                                    'Estudiantes Egresados'
-                                                                ) : selectedCantidad === 'inscarreras' ? (
-                                                                    'Inscritos por carrera'
-                                                                ) : selectedCantidad === 'retirados' ? (
-                                                                    'Estudiantes Retirados'
-                                                                ) : (
-                                                                    'Inscritos nuevos'
-                                                                )} 
-                        />
-                        {/* Segunda barra (segundo conjunto de datos) */}
-                        <Bar dataKey="inscritos2" fill="#82ca9d" name={
-                                            selectedCantidad2 === 'titulados' ? (
-                                                'Estudiantes Titulados'
-                                            ) : selectedCantidad2 === 'egresados' ? (
-                                                'Estudiantes Egresados'
-                                            ) : selectedCantidad2 === 'inscarreras' ? (
-                                                'Inscritos por carrera'
-                                            ) : selectedCantidad2 === 'retirados' ? (
-                                                'Estudiantes Retirados'
-                                            ) : (
-                                                'Inscritos nuevos'
-                                            )
-                        } />
-                      </BarChart>
-                  </ResponsiveContainer>
-  
-  
-              </ChartContainer>
+                                // Segundo valor de inscritos según la segunda selección del usuario
+                                inscritos2:
+                                selectedCantidad2 === 'titulados'
+                                    ? data.titulados
+                                    : selectedCantidad2 === 'egresados'
+                                    ? data.egresados
+                                    : selectedCantidad2 === 'inscarreras'
+                                    ? data.t_ins
+                                    : selectedCantidad2 === 'todos'
+                                    ? data.t_ins
+                                    : selectedCantidad2 === 'retirados'
+                                    ? data.retirados
+                                    : selectedCantidad2 === 'aprobados'
+                                    ? data.porcentaje_aprobados
+                                    : selectedCantidad2 === 'reprobados'
+                                    ? data.porcentaje_reprobados
+                                    : selectedCantidad2 === 'reprobados0'
+                                    ? data.porcentaje_reprobados_con_0
+                                    : selectedCantidad2 === 'sinNota'
+                                    ? data.porcentaje_sin_nota
+                                    : data.t_nue,
+                            }))}
+                            >
+                            <XAxis dataKey="etiqueta" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            {/* Primera barra (primer conjunto de datos) */}
+                            <Bar dataKey="inscritos1" fill="#8884d8" name={selectedCantidad === 'titulados' ? (
+                                                                        'Estudiantes Titulados'
+                                                                    ) : selectedCantidad === 'egresados' ? (
+                                                                        'Estudiantes Egresados'
+                                                                    ) : selectedCantidad === 'inscarreras' ? (
+                                                                        'Inscritos por carrera'
+                                                                    ) : selectedCantidad === 'retirados' ? (
+                                                                        'Estudiantes Retirados'
+                                                                    ) : selectedCantidad === 'todos' ? (
+                                                                        'Todos los estudiantes'
+                                                                    ) : selectedCantidad === 'aprobados' ? (
+                                                                        'Porcentaje de estudiantes Aprobados'
+                                                                    ) : selectedCantidad === 'reprobados' ? (
+                                                                        'Porcentaje de estudiantes Reprobados'
+                                                                    ) : selectedCantidad === 'sinNota' ? (
+                                                                        'Porcentaje de estudiantes sin Nota'
+                                                                    ) : selectedCantidad === 'reprobados0' ? (
+                                                                        'Porcentaje de estudiantes Reprobados con 0'
+                                                                    ) : (
+                                                                        'Inscritos nuevos'
+                                                                    )} 
+                            />
+                            {/* Segunda barra (segundo conjunto de datos) */}
+                            <Bar dataKey="inscritos2" fill="#82ca9d" name={
+                                                selectedCantidad2 === 'titulados' ? (
+                                                    'Estudiantes Titulados'
+                                                ) : selectedCantidad2 === 'egresados' ? (
+                                                    'Estudiantes Egresados'
+                                                ) : selectedCantidad2 === 'inscarreras' ? (
+                                                    'Inscritos por carrera'
+                                                ) : selectedCantidad2 === 'todos' ? (
+                                                    'todos los estudiantes'
+                                                ) : selectedCantidad2 === 'retirados' ? (
+                                                    'Estudiantes Retirados'
+                                                ) : selectedCantidad2 === 'aprobados' ? (
+                                                    'Porcentaje de estudiantes Aprobados'
+                                                ) : selectedCantidad2 === 'reprobados' ? (
+                                                    'Porcentaje de estudiantes Reprobados'
+                                                ) : selectedCantidad2 === 'sinNota' ? (
+                                                    'Porcentaje de estudiantes sin Nota'
+                                                ) : selectedCantidad2 === 'reprobados0' ? (
+                                                    'Porcentaje de estudiantes Reprobados con 0'
+                                                ) : (
+                                                    'Inscritos nuevos'
+                                                )
+                            } />
+                        </BarChart>
+                    </ResponsiveContainer>
+    
+    
+                </ChartContainer>
+              )}
           </CardContent>
           <CardFooter className="flex-col items-start gap-1">
               <CardDescription>
@@ -402,7 +542,31 @@ import {
           </Card>
           <Card className="" x-chunk="charts-01-chunk-7">
               <CardHeader className="space-y-0 pb-0">
-                  <CardDescription>Estudiantes Inscritos por Carrera</CardDescription>
+                  <CardDescription>
+                  {
+                    selectedCantidad === 'titulados' ? (
+                        'Estudiantes Titulados'
+                    ) : selectedCantidad === 'egresados' ? (
+                        'Estudiantes Egresados'
+                    ) : selectedCantidad === 'inscarreras' ? (
+                        'Inscritos por carrera'
+                    ) : selectedCantidad === 'retirados' ? (
+                        'Estudiantes Retirados'
+                    ) : selectedCantidad === 'todos' ? (
+                        'Todos los estudiantes'
+                    ) : selectedCantidad === 'aprobados' ? (
+                        '%Aprobados'
+                    ) : selectedCantidad === 'reprobados' ? (
+                        '%Reprobados'
+                    ) : selectedCantidad === 'reprobados0' ? (
+                        '%Reprobados con 0'
+                    ) : selectedCantidad === 'sinNota' ? (
+                        '%sin Nota'
+                    ) : (
+                        'Inscritos nuevos'
+                    )
+                  }
+                  </CardDescription>
                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                   {totalCount}
                   <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
@@ -411,95 +575,102 @@ import {
                   </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                  <ChartContainer
-                  config={{
-                      inscritos: {
-                      label: 'Inscritos',
-                      color: 'hsl(var(--chart-2))',
-                      },
-                  }}
-                  >
-                  <ResponsiveContainer width="100%" height={400}>
-                      <AreaChart
-                      accessibilityLayer
-                      data={allEstadisticas.map((data: any) => ({
-                          etiqueta:
-                          selectedEtiqueta === 'localidad'
-                              ? data.localidad
-                              : selectedEtiqueta === 'facultad'
-                              ? data.nombre_facultad
-                              : data.nombre_carrera,
-                          inscritos:
-                          selectedCantidad === 'inslocalidad'
-                              ? data.inscritos_localidad
-                              : selectedCantidad === 'insfacultad'
-                              ? data.inscritos_facultad
-                              : selectedCantidad === 'inscarreras'
-                              ? data.t_ins
-                              : data.t_nue,
-                      }))}
-                      margin={{
-                          left: 0,
-                          right: 0,
-                          top: 0,
-                          bottom: 60,
-                      }}
-                      >
-                      {/* Eje X para mostrar las etiquetas (carreras, localidades, etc.) */}
-                      <XAxis
-                          dataKey="etiqueta"
-                          angle={-45}
-                          textAnchor="end"
-                          tickLine={false}
-                          axisLine={false}
-                          tickMargin={4}
-                      />
-                      <YAxis domain={['dataMin - 5', 'dataMax + 2']} hide />
-                      <defs>
-                          <linearGradient id="fillInscritos" x1="0" y1="0" x2="0" y2="1">
-                          <stop
-                              offset="5%"
-                              stopColor="var(--color-inscritos)"
-                              stopOpacity={0.8}
-                          />
-                          <stop
-                              offset="95%"
-                              stopColor="var(--color-inscritos)"
-                              stopOpacity={0.1}
-                          />
-                          </linearGradient>
-                      </defs>
-                      {/* Gráfico de área para mostrar los inscritos */}
-                      <Area
-                          dataKey="inscritos"
-                          type="natural"
-                          fill="url(#fillInscritos)"
-                          fillOpacity={0.4}
-                          stroke="var(--color-inscritos)"
-                      />
-                      {/* Tooltip para mostrar los detalles al hacer hover */}
-                      <ChartTooltip
-              cursor={false}
-              content={
-                  <ChartTooltipContent
-                  labelFormatter={(label) => `Carrera/Facultad: ${label}`} // Aquí mostramos la etiqueta correcta
-                  formatter={(value) => (
-                      <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                      Inscritos
-                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                          {value}
-                          <span className="font-normal text-muted-foreground">
-                          estudiantes
-                          </span>
-                      </div>
-                      </div>
-                  )}
-                  />
-              }
-              />
-                      </AreaChart>
-                  </ResponsiveContainer>
-                  </ChartContainer>
+                  {isLoading?(
+                    <SkeletonBarChart />
+                  ):(
+
+                    <ChartContainer
+                    config={{
+                        inscritos: {
+                        label: 'Inscritos',
+                        color: 'hsl(var(--chart-2))',
+                        },
+                    }}
+                    >
+                    <ResponsiveContainer width="100%" height={400}>
+                        <AreaChart
+                        accessibilityLayer
+                        data={allEstadisticas.map((data: any) => ({
+                            etiqueta:
+                            selectedEtiqueta === 'localidad'
+                                ? data.localidad
+                                : selectedEtiqueta === 'facultad'
+                                ? data.nombre_facultad
+                                : selectedEtiqueta === 'periodo'
+                                ? data.periodo
+                                : data.nombre_carrera,
+                            inscritos:
+                            selectedCantidad === 'inslocalidad'
+                                ? data.inscritos_localidad
+                                : selectedCantidad === 'insfacultad'
+                                ? data.inscritos_facultad
+                                : selectedCantidad === 'inscarreras'
+                                ? data.t_ins
+                                : data.t_nue,
+                        }))}
+                        margin={{
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 60,
+                        }}
+                        >
+                        {/* Eje X para mostrar las etiquetas (carreras, localidades, etc.) */}
+                        <XAxis
+                            dataKey="etiqueta"
+                            angle={-45}
+                            textAnchor="end"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={4}
+                        />
+                        <YAxis domain={['dataMin - 5', 'dataMax + 2']} hide />
+                        <defs>
+                            <linearGradient id="fillInscritos" x1="0" y1="0" x2="0" y2="1">
+                            <stop
+                                offset="5%"
+                                stopColor="var(--color-inscritos)"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="var(--color-inscritos)"
+                                stopOpacity={0.1}
+                            />
+                            </linearGradient>
+                        </defs>
+                        {/* Gráfico de área para mostrar los inscritos */}
+                        <Area
+                            dataKey="inscritos"
+                            type="natural"
+                            fill="url(#fillInscritos)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-inscritos)"
+                        />
+                        {/* Tooltip para mostrar los detalles al hacer hover */}
+                        <ChartTooltip
+                cursor={false}
+                content={
+                    <ChartTooltipContent
+                    labelFormatter={(label) => `Carrera/Facultad: ${label}`} // Aquí mostramos la etiqueta correcta
+                    formatter={(value) => (
+                        <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
+                        Inscritos
+                        <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                            {value}
+                            <span className="font-normal text-muted-foreground">
+                            estudiantes
+                            </span>
+                        </div>
+                        </div>
+                    )}
+                    />
+                }
+                />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                    </ChartContainer>
+                )}
               </CardContent>
           </Card>
         </div>

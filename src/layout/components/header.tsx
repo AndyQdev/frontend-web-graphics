@@ -1,4 +1,4 @@
-import {  Menu } from 'lucide-react'
+import {  BarChart, Menu } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import Navigation from './navigation'
 import { useHeader } from '@/hooks/useHeader'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { ModeToggle } from '@/components/mode-toggle'
+import { CardTitle } from '@/components/ui/card'
 
 const Header = () => {
   const { breadcrumb } = useHeader()
@@ -26,11 +27,12 @@ const Header = () => {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="flex bg-light-secondary flex-col px-0 py-0 gap-0">
+        <SheetContent side="left" className="flex bg-light-secondary dark:bg-dark-bg-primary flex-col px-0 py-0 gap-0">
           <DialogTitle></DialogTitle>
-          <SheetHeader>
+          <SheetHeader className='pt-3 pl-3'>
             <div className="flex items-center gap-3 px-4 border-b py-3 h-14">
-              <h1>GRAPHICS</h1>
+              <BarChart className='text-light-primary'/>
+              <CardTitle >GRAPHICS</CardTitle>
             </div>
           </SheetHeader>
           <Navigation />

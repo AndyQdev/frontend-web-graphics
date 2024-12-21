@@ -28,7 +28,10 @@ import {
 import { useGetAllResource } from '@/hooks/useCrud';
 import { ENDPOINTS } from '@/utils';
 import { useState } from 'react';
+import { SkeletonTable } from '@/components/skeleton-table';
+import { SkeletonBarChart } from '@/components/skeleton-card1';
 const locadidades: string[] = [
+    'Todas',
     'SANTA CRUZ',
     'MONTERO',
     'CAMIRI',
@@ -57,8 +60,8 @@ const Charts = (): JSX.Element => {
     const [selectedModalidad, setSelectedModalidad] = useState('presencial');
 
     //http://localhost:3000/api/estadisticas-academicas/filter?periodo=2019-1&localidad=SANTA CRUZ&facultad=05 CIENCIAS EXACTAS Y
-    const { allResource: allEstadisticas} = useGetAllResource(
-        `${ENDPOINTS.ESTADISTICA_ACADEMICA}/filter?periodo=${selectedPeriod}&localidad=${selectedLocation}&facultad=${selectedFaculty}&modalidad=${selectedModalidad}`
+    const { allResource: allEstadisticas, isLoading} = useGetAllResource(
+        `${ENDPOINTS.ESTADISTICA_ACADEMICA}/filter?periodo=${selectedPeriod}&localidad=${selectedLocation}&facultad=${selectedFaculty}&modalidad=${selectedModalidad}&etiquetaFila=${selectedEtiqueta}`
     )
     const { allResource: allFacultades} = useGetAllResource(ENDPOINTS.FACULTAD)
     // const facultad: Facultad[] = allFacultades
@@ -71,6 +74,8 @@ const Charts = (): JSX.Element => {
             return acc + (data.t_ins || 0); // Sumamos 't_ins' (inscritos por carreras)
         }else if (selectedCantidad === 'retirados') {
             return acc + (data.retirados || 0); // Sumamos 't_ins' (inscritos por carreras)
+        }else if (selectedCantidad === 'todos') {
+            return acc + (data.t_ins || 0); 
         }else {
             return acc + (data.t_nue || 0); // Por defecto, sumamos 't_nue' (inscritos nuevos)
         }
@@ -95,7 +100,7 @@ const Charts = (): JSX.Element => {
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
           >
-            {/* <option value="Todas">Todas</option> */}
+            <option value="Todas">Todas</option>
             <option value="2019-1">2019-1</option>
             <option value="2019-2">2019-2</option>
             <option value="2020-1">2020-1</option>
@@ -145,7 +150,7 @@ const Charts = (): JSX.Element => {
                 value={selectedModalidad}
                 onChange={(e) => setSelectedModalidad(e.target.value)}
             >
-                {/* <option value="Todas">Todas</option> */}
+                <option value="Todas">Todas</option>
                 <option value="PRESENCIAL">PRESENCIAL</option>
                 <option value="VIRTUAL">VIRTUAL</option>
             </select>
@@ -170,6 +175,9 @@ const Charts = (): JSX.Element => {
                     <option value="carreras">Carreras</option>
                     <option value="localidad">Localidad</option>
                     <option value="facultad">Facultad</option>
+                    <option value="modalidad">Modalidad</option>
+                    <option value="periodo">Periodo</option>
+
                     {/* Agregar más facultades aquí */}
                 </select>
             </th>
@@ -185,6 +193,7 @@ const Charts = (): JSX.Element => {
                 >
                     {/* <option value="inslocalidad">Inscritos x localidades</option> */}
                     {/* <option value="insfacultad">Inscritos x facultades</option> */}
+                    <option value="todos">Todos</option>
                     <option value="inscarreras">Inscritos x carreras</option>
                     <option value="newinscritos">Inscritos nuevos</option>
                     <option value="titulados">Titulados</option>
@@ -199,32 +208,42 @@ const Charts = (): JSX.Element => {
           
         </thead>
         <tbody>
-          {allEstadisticas.map((data: any, index:number) => (
-            <tr key={index} className="border-b">
-                {
-                    selectedEtiqueta === 'localidad' ? (
-                        <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.localidad}</td>
-                    ) : selectedEtiqueta === 'facultad' ? (
-                        <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_facultad}</td>
-                    ) : (
-                        <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_carrera}</td>
-                    )
-                }
-                {
-                    selectedCantidad === 'titulados' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.titulados}</td>
-                    ) : selectedCantidad === 'egresados' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.egresados}</td>
-                    ) : selectedCantidad === 'inscarreras' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_ins}</td>
-                    ) : selectedCantidad === 'retirados' ? (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.retirados}</td>
-                    ) : (
-                        <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_nue}</td>
-                    )
-                }
-            </tr>
-          ))}
+          {isLoading?(
+            <SkeletonTable rows={10}></SkeletonTable>
+          ):(
+            allEstadisticas.map((data: any, index:number) => (
+                <tr key={index} className="border-b">
+                    {
+                        selectedEtiqueta === 'localidad' ? (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.localidad}</td>
+                        ) : selectedEtiqueta === 'facultad' ? (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_facultad}</td>
+                        ) : selectedEtiqueta === 'modalidad' ? (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.modalidad}</td>
+                        ) : selectedEtiqueta === 'periodo' ? (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.periodo}</td>
+                        ) : (
+                            <td className="px-4 py-2 text-sm text-gray-700 dark:text-white">{data.nombre_carrera}</td>
+                        )
+                    }
+                    {
+                        selectedCantidad === 'titulados' ? (
+                            <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.titulados}</td>
+                        ) : selectedCantidad === 'egresados' ? (
+                            <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.egresados}</td>
+                        ) : selectedCantidad === 'inscarreras' ? (
+                            <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_ins}</td>
+                        ) : selectedCantidad === 'todos' ? (
+                            <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_ins}</td>
+                        ) : selectedCantidad === 'retirados' ? (
+                            <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.retirados}</td>
+                        ) : (
+                            <td className="px-4 py-2 text-sm text-right text-gray-700 dark:text-white">{data.t_nue}</td>
+                        )
+                    }
+                </tr>
+            ))
+          )}
           {/* Total general */}
           <tr className="bg-gray-200 font-bold dark:bg-slate-800">
             <td className="px-4 py-2 text-sm">Total general</td>
@@ -250,6 +269,8 @@ const Charts = (): JSX.Element => {
                     'Inscritos por carrera'
                 ) : selectedCantidad === 'retirados' ? (
                     'Estudiantes Retirados'
+                ) : selectedCantidad === 'todos' ? (
+                    'Todos los estudiantes'
                 ) : (
                     'Inscritos nuevos'
                 )
@@ -257,77 +278,85 @@ const Charts = (): JSX.Element => {
             </CardTitle>
         </CardHeader>
         <CardContent>
-            <ChartContainer
-            config={{
-                inscritos: {
-                    label: 'Inscritos',
-                    color: 'hsl(var(--chart-1))'
-                }
-            }}
-            >
-                <ResponsiveContainer width="100%" height={400}>
-                    <BarChart
-                        accessibilityLayer
-                        margin={{
-                            left: -4,
-                            right: -4,
-                            bottom: 60,  // Aumentamos el margen inferior para más espacio
-                        }}
-                        data={allEstadisticas.map((data: any) => ({
-                            // Mapeo dinámico de las etiquetas
-                            etiqueta:
-                                selectedEtiqueta === 'localidad'
-                                ? data.localidad
-                                : selectedEtiqueta === 'facultad'
-                                ? data.nombre_facultad
-                                : data.nombre_carrera,
-                            // Mapeo dinámico de los valores de inscritos
-                            inscritos:
-                                selectedCantidad === 'titulados'
-                                ? data.titulados
-                                : selectedCantidad === 'egresados'
-                                ? data.egresados
-                                : selectedCantidad === 'inscarreras'
-                                ? data.t_ins
-                                : selectedCantidad === 'retirados'
-                                ? data.retirados
-                                : data.t_nue,
-                        }))}
-                    >
-                        <Bar
-                        dataKey="inscritos"
-                        fill="var(--color-inscritos)"
-                        radius={5}
-                        fillOpacity={0.6}
-                        activeBar={<Rectangle fillOpacity={0.8} />}
-                        />
-                        <XAxis
-                        dataKey="etiqueta"
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={10} // Aumenta el margen entre los ticks y las etiquetas
-                        angle={-45} // Mantiene las etiquetas inclinadas
-                        textAnchor="end"
-                        interval={0} // Muestra todas las etiquetas (puedes ajustar a 'preserveStartEnd' para mostrar solo algunas si es necesario)
-                        />
-                        <ChartTooltip
-                        defaultIndex={2}
-                        content={
-                            <ChartTooltipContent hideIndicator labelFormatter={(value) => value} />
-                        }
-                        cursor={false}
-                        />
-                        <ReferenceLine
-                        y={160}
-                        stroke="hsl(var(--muted-foreground))"
-                        strokeDasharray="3 3"
-                        strokeWidth={1}
-                        />
-                    </BarChart>
-                </ResponsiveContainer>
-
-
-            </ChartContainer>
+            {isLoading ?(
+                <SkeletonBarChart></SkeletonBarChart>
+            ):(
+                <ChartContainer
+                config={{
+                    inscritos: {
+                        label: 'Inscritos',
+                        color: 'hsl(var(--chart-1))'
+                    }
+                }}
+                >
+                    <ResponsiveContainer width="100%" height={400}>
+                        <BarChart
+                            accessibilityLayer
+                            margin={{
+                                left: -4,
+                                right: -4,
+                                bottom: 60,  // Aumentamos el margen inferior para más espacio
+                            }}
+                            data={allEstadisticas.map((data: any) => ({
+                                // Mapeo dinámico de las etiquetas
+                                etiqueta:
+                                    selectedEtiqueta === 'localidad'
+                                    ? data.localidad
+                                    : selectedEtiqueta === 'facultad'
+                                    ? data.nombre_facultad
+                                    : selectedEtiqueta === 'modalidad'
+                                    ? data.modalidad
+                                    : selectedEtiqueta === 'periodo'
+                                    ? data.periodo
+                                    : data.nombre_carrera,
+                                // Mapeo dinámico de los valores de inscritos
+                                inscritos:
+                                    selectedCantidad === 'titulados'
+                                    ? data.titulados
+                                    : selectedCantidad === 'egresados'
+                                    ? data.egresados
+                                    : selectedCantidad === 'inscarreras'
+                                    ? data.t_ins
+                                    : selectedCantidad === 'todos'
+                                    ? data.t_ins
+                                    : selectedCantidad === 'retirados'
+                                    ? data.retirados
+                                    : data.t_nue,
+                            }))}
+                        >
+                            <Bar
+                            dataKey="inscritos"
+                            fill="var(--color-inscritos)"
+                            radius={5}
+                            fillOpacity={0.6}
+                            activeBar={<Rectangle fillOpacity={0.8} />}
+                            />
+                            <XAxis
+                            dataKey="etiqueta"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={10} // Aumenta el margen entre los ticks y las etiquetas
+                            angle={-45} // Mantiene las etiquetas inclinadas
+                            textAnchor="end"
+                            interval={0} // Muestra todas las etiquetas (puedes ajustar a 'preserveStartEnd' para mostrar solo algunas si es necesario)
+                            />
+                            <ChartTooltip
+                            defaultIndex={2}
+                            content={
+                                <ChartTooltipContent hideIndicator labelFormatter={(value) => value} />
+                            }
+                            cursor={false}
+                            />
+                            <ReferenceLine
+                            y={160}
+                            stroke="hsl(var(--muted-foreground))"
+                            strokeDasharray="3 3"
+                            strokeWidth={1}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </ChartContainer>
+            )}
         </CardContent>
         <CardFooter className="flex-col items-start gap-1">
             <CardDescription>
@@ -338,7 +367,23 @@ const Charts = (): JSX.Element => {
         </Card>
         <Card className="" x-chunk="charts-01-chunk-7">
             <CardHeader className="space-y-0 pb-0">
-                <CardDescription>Estudiantes Inscritos por Carrera</CardDescription>
+                <CardDescription>
+                {
+                selectedCantidad === 'titulados' ? (
+                    'Estudiantes Titulados'
+                ) : selectedCantidad === 'egresados' ? (
+                    'Estudiantes Egresados'
+                ) : selectedCantidad === 'inscarreras' ? (
+                    'Inscritos por carrera'
+                ) : selectedCantidad === 'retirados' ? (
+                    'Estudiantes Retirados'
+                ) : selectedCantidad === 'todos' ? (
+                    'Todos los estudiantes'
+                ) : (
+                    'Inscritos nuevos'
+                )
+            }
+                </CardDescription>
                 <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                 {totalCount}
                 <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
@@ -347,95 +392,106 @@ const Charts = (): JSX.Element => {
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-                <ChartContainer
-                config={{
-                    inscritos: {
-                    label: 'Inscritos',
-                    color: 'hsl(var(--chart-2))',
-                    },
-                }}
-                >
-                <ResponsiveContainer width="100%" height={400}>
-                    <AreaChart
-                    accessibilityLayer
-                    data={allEstadisticas.map((data: any) => ({
-                        etiqueta:
-                        selectedEtiqueta === 'localidad'
-                            ? data.localidad
-                            : selectedEtiqueta === 'facultad'
-                            ? data.nombre_facultad
-                            : data.nombre_carrera,
-                        inscritos:
-                        selectedCantidad === 'inslocalidad'
-                            ? data.inscritos_localidad
-                            : selectedCantidad === 'insfacultad'
-                            ? data.inscritos_facultad
-                            : selectedCantidad === 'inscarreras'
-                            ? data.t_ins
-                            : data.t_nue,
-                    }))}
-                    margin={{
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 60,
+                {isLoading?(
+                    <SkeletonBarChart></SkeletonBarChart>
+                ):(
+
+                    <ChartContainer
+                    config={{
+                        inscritos: {
+                        label: 'Inscritos',
+                        color: 'hsl(var(--chart-2))',
+                        },
                     }}
                     >
-                    {/* Eje X para mostrar las etiquetas (carreras, localidades, etc.) */}
-                    <XAxis
-                        dataKey="etiqueta"
-                        angle={-45}
-                        textAnchor="end"
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={4}
-                    />
-                    <YAxis domain={['dataMin - 5', 'dataMax + 2']} hide />
-                    <defs>
-                        <linearGradient id="fillInscritos" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                            offset="5%"
-                            stopColor="var(--color-inscritos)"
-                            stopOpacity={0.8}
+                    <ResponsiveContainer width="100%" height={400}>
+                        <AreaChart
+                        accessibilityLayer
+                        data={allEstadisticas.map((data: any) => ({
+                            etiqueta:
+                            selectedEtiqueta === 'localidad'
+                                ? data.localidad
+                                : selectedEtiqueta === 'facultad'
+                                ? data.nombre_facultad
+                                : selectedEtiqueta === 'modalidad'
+                                ? data.modalidad
+                                : selectedEtiqueta === 'periodo'
+                                ? data.periodo
+                                : data.nombre_carrera,
+                            inscritos:
+                            selectedCantidad === 'inslocalidad'
+                                ? data.inscritos_localidad
+                                : selectedCantidad === 'insfacultad'
+                                ? data.inscritos_facultad
+                                : selectedCantidad === 'inscarreras'
+                                ? data.t_ins
+                                : selectedCantidad === 'todos'
+                                ? data.t_ins
+                                : data.t_nue,
+                        }))}
+                        margin={{
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 60,
+                        }}
+                        >
+                        {/* Eje X para mostrar las etiquetas (carreras, localidades, etc.) */}
+                        <XAxis
+                            dataKey="etiqueta"
+                            angle={-45}
+                            textAnchor="end"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={4}
                         />
-                        <stop
-                            offset="95%"
-                            stopColor="var(--color-inscritos)"
-                            stopOpacity={0.1}
+                        <YAxis domain={['dataMin - 5', 'dataMax + 2']} hide />
+                        <defs>
+                            <linearGradient id="fillInscritos" x1="0" y1="0" x2="0" y2="1">
+                            <stop
+                                offset="5%"
+                                stopColor="var(--color-inscritos)"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="var(--color-inscritos)"
+                                stopOpacity={0.1}
+                            />
+                            </linearGradient>
+                        </defs>
+                        {/* Gráfico de área para mostrar los inscritos */}
+                        <Area
+                            dataKey="inscritos"
+                            type="natural"
+                            fill="url(#fillInscritos)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-inscritos)"
                         />
-                        </linearGradient>
-                    </defs>
-                    {/* Gráfico de área para mostrar los inscritos */}
-                    <Area
-                        dataKey="inscritos"
-                        type="natural"
-                        fill="url(#fillInscritos)"
-                        fillOpacity={0.4}
-                        stroke="var(--color-inscritos)"
+                        {/* Tooltip para mostrar los detalles al hacer hover */}
+                        <ChartTooltip
+                cursor={false}
+                content={
+                    <ChartTooltipContent
+                    labelFormatter={(label) => `Carrera/Facultad: ${label}`} // Aquí mostramos la etiqueta correcta
+                    formatter={(value) => (
+                        <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
+                        Inscritos
+                        <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                            {value}
+                            <span className="font-normal text-muted-foreground">
+                            estudiantes
+                            </span>
+                        </div>
+                        </div>
+                    )}
                     />
-                    {/* Tooltip para mostrar los detalles al hacer hover */}
-                    <ChartTooltip
-            cursor={false}
-            content={
-                <ChartTooltipContent
-                labelFormatter={(label) => `Carrera/Facultad: ${label}`} // Aquí mostramos la etiqueta correcta
-                formatter={(value) => (
-                    <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                    Inscritos
-                    <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                        {value}
-                        <span className="font-normal text-muted-foreground">
-                        estudiantes
-                        </span>
-                    </div>
-                    </div>
-                )}
+                }
                 />
-            }
-            />
-                    </AreaChart>
-                </ResponsiveContainer>
-                </ChartContainer>
+                        </AreaChart>
+                    </ResponsiveContainer>
+                    </ChartContainer>
+            )}
             </CardContent>
         </Card>
       </div>

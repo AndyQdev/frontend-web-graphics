@@ -16,7 +16,7 @@ const Aside = () => {
       >
         <div className={`${isContract ? 'hidden' : ''} flex items-center gap-3 w-full justify-center px-4`}>
           <BarChart className='text-light-primary'/>
-          <CardTitle>GRAPHICS</CardTitle>
+          <CardTitle >GRAPHICS</CardTitle>
         </div>
         <Button
           variant='ghost'
